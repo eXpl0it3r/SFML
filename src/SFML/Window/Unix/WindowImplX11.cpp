@@ -850,7 +850,7 @@ void WindowImplX11::setSize(const Vector2u& size)
 
 namespace
 {
-void setWindowSizeConstraints(::Window m_window, ::Display* m_display, const Vector2u& minimumSize, const Vector2u& maximumSize)
+void setWindowSizeConstraints(::Window window, ::Display* display, const Vector2u& minimumSize, const Vector2u& maximumSize)
 {
     XSizeHints* sizeHints = XAllocSizeHints();
     sizeHints->flags      = PMinSize | PMaxSize;
@@ -858,7 +858,7 @@ void setWindowSizeConstraints(::Window m_window, ::Display* m_display, const Vec
     sizeHints->min_height = static_cast<int>(minimumSize.y);
     sizeHints->max_width  = static_cast<int>(maximumSize.x);
     sizeHints->max_height = static_cast<int>(maximumSize.y);
-    XSetWMNormalHints(m_display, m_window, sizeHints);
+    XSetWMNormalHints(display, window, sizeHints);
     XFree(sizeHints);
 }
 } // namespace
