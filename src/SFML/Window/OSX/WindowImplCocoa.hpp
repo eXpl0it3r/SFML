@@ -378,10 +378,8 @@ private:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    WindowImplDelegateRef m_delegate;               ///< Implementation in Obj-C.
-    bool                  m_showCursor{true};       ///< Is the cursor displayed or hidden?
-    Vector2u              m_minimumSize{0, 0};      ///< Minimum size the rendering region of the window can be
-    Vector2u m_maximumSize{0xFFFFFFFF, 0xFFFFFFFF}; ///< Maximum size the rendering region of the window can be
+    WindowImplDelegateRef m_delegate;         ///< Implementation in Obj-C.
+    bool                  m_showCursor{true}; ///< Is the cursor displayed or hidden?
 };
 
 } // namespace priv

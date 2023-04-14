@@ -440,9 +440,6 @@ void WindowImplCocoa::setSize(const Vector2u& size)
 ////////////////////////////////////////////////////////////
 void WindowImplCocoa::setMinimumSize(const Vector2u& minimumSize)
 {
-    assert(minimumSize.x <= m_maximumSize.x);
-    assert(minimumSize.y <= m_maximumSize.y);
-
     AutoreleasePool pool;
     [m_delegate setMinimumSize:NSMakeSize(minimumSize.x, minimumSize.y)];
 }
@@ -451,9 +448,6 @@ void WindowImplCocoa::setMinimumSize(const Vector2u& minimumSize)
 ////////////////////////////////////////////////////////////
 void WindowImplCocoa::setMaximumSize(const Vector2u& maximumSize)
 {
-    assert(maximumSize.x >= m_minimumSize.x);
-    assert(maximumSize.y >= m_minimumSize.y);
-
     AutoreleasePool pool;
     [m_delegate setMaximumSize:NSMakeSize(maximumSize.x, maximumSize.y)];
 }
