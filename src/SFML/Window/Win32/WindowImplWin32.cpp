@@ -341,6 +341,20 @@ void WindowImplWin32::setSize(const Vector2u& size)
 
 
 ////////////////////////////////////////////////////////////
+void WindowImplWin32::setMinimumSize(const Vector2u& minimumSize)
+{
+    m_minimumSize.x = minimumSize.x;
+    m_minimumSize.y = minimumSize.y;
+}
+
+////////////////////////////////////////////////////////////
+void WindowImplWin32::setMaximumSize(const Vector2u& maximumSize)
+{
+    m_maximumSize.x = maximumSize.x;
+    m_maximumSize.y = maximumSize.y;
+}
+
+////////////////////////////////////////////////////////////
 void WindowImplWin32::setTitle(const String& title)
 {
     SetWindowTextW(m_handle, title.toWideString().c_str());
@@ -744,6 +758,71 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
 
                 // Restore/update cursor grabbing
                 grabCursor(m_cursorGrabbed);
+            }
+            break;
+        }
+
+        // tell OS whether we're happy with the proposed changes to the window size
+        case WM_SIZING:
+        {
+            RECT* ncsRect = reinterpret_cast<RECT*>(lParam);
+            auto  signedWidth   = ncsRect->right - ncsRect->left;
+            if (signedWidth < 0)
+                signedWidth = 0;
+
+            auto width = (unsigned int)signedWidth;
+
+            if (width < m_minimumSize.x)
+            {
+                // we don't like this
+
+                bool isLeft = false; // are we being resized on the left? If not, it's the right
+                switch (wParam)
+                {
+                    case WMSZ_BOTTOMLEFT:
+                        isLeft = true;
+                        break;
+                    case WMSZ_TOPLEFT:
+                        isLeft = true;
+                        break;
+                    case WMSZ_LEFT:
+                        isLeft = true;
+                        break;
+                }
+                if (isLeft)
+                {
+                    ncsRect->left = ncsRect->right - m_minimumSize.x;
+                }
+                else
+                {
+                    ncsRect->right = ncsRect->left + m_minimumSize.x;
+                }
+            }
+            else if (width > m_maximumSize.x && m_maximumSize.x != 0)
+            {
+                // we also don't like this either
+
+                bool isLeft = false; // are we being resized on the left? If not, it's the right
+                switch (wParam)
+                {
+                    case WMSZ_BOTTOMLEFT:
+                        isLeft = true;
+                        break;
+                    case WMSZ_TOPLEFT:
+                        isLeft = true;
+                        break;
+                    case WMSZ_LEFT:
+                        isLeft = true;
+                        break;
+                }
+                if (isLeft)
+                {
+                    ncsRect->left = ncsRect->right - m_maximumSize.x;
+                }
+                else
+                {
+                    ncsRect->right = ncsRect->left + m_maximumSize.x;
+                }
             }
             break;
         }
