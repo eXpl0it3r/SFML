@@ -766,11 +766,8 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
         case WM_SIZING:
         {
             RECT* ncsRect = reinterpret_cast<RECT*>(lParam);
-            auto  signedWidth   = ncsRect->right - ncsRect->left;
-            if (signedWidth < 0)
-                signedWidth = 0;
-
-            auto width = (unsigned int)signedWidth;
+            assert(ncsRect->left > ncsRect->right);
+            auto  width   = static_cast<unsigned int>(ncsRect->right - ncsRect->left);
 
             if (width < m_minimumSize.x)
             {
