@@ -120,7 +120,7 @@ public:
     void setMinimumSize(const Vector2u& minimumSize) override;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Set the maximum size of the window, preventing it from being user-resized to bigger than this. 0,0 (default) means no maximum. 
+    /// \brief Set the maximum size of the window, preventing it from being user-resized to bigger than this. 0,0 (default) means no maximum.
     ///
     /// \param size New maximum size, in pixels
     ///
@@ -308,8 +308,8 @@ private:
     bool          m_mouseInside{};   //!< Mouse is inside the window?
     bool          m_fullscreen{};    //!< Is the window fullscreen?
     bool          m_cursorGrabbed{}; //!< Is the mouse cursor trapped?
-    Vector2u      m_minimumSize{};   //!< The minimum size of a window, as set by setMinimumSize(Vector2u&)
-    Vector2u      m_maximumSize{};   //!< The maximum size of a window, as set by setMaximumSize(Vector2u&)
+    Vector2u m_minimumSize{};        //!< The minimum size of a window, as set by setMinimumSize(Vector2u&)
+    Vector2u m_maximumSize{};        //!< The maximum size of a window, as set by setMaximumSize(Vector2u&)
 };
 
 } // namespace priv
