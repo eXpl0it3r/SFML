@@ -769,7 +769,7 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
             assert(ncsRect->left < ncsRect->right);
             assert(ncsRect->top < ncsRect->bottom);
             auto width  = static_cast<unsigned int>(ncsRect->right - ncsRect->left);
-            auto height = static_cast<unsigned int>(ncsRect->top - ncsRect->bottom);
+            auto height = static_cast<unsigned int>(ncsRect->bottom - ncsRect->top);
             bool isTop  = false; // are we being resized on the top? If not, it's the bottom
             bool isLeft = false; // are we being resized on the left? If not, it's the right
             switch (wParam)
