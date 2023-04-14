@@ -150,6 +150,20 @@ void WindowImplAndroid::setSize(const Vector2u& /* size */)
 
 
 ////////////////////////////////////////////////////////////
+void WindowImplAndroid::setMinimumSize(const Vector2u& /* minimumSize */)
+{
+    // Not applicable
+}
+
+
+////////////////////////////////////////////////////////////
+void WindowImplAndroid::setMaximumSize(const Vector2u& /* maximumSize */)
+{
+    // Not applicable
+}
+
+
+////////////////////////////////////////////////////////////
 void WindowImplAndroid::setTitle(const String& /* title */)
 {
     // Not applicable
