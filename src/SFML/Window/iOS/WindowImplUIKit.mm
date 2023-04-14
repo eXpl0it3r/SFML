@@ -147,6 +147,20 @@ void WindowImplUIKit::setSize(const Vector2u& size)
 
 
 ////////////////////////////////////////////////////////////
+void WindowImplUIKit::setMinimumSize(const Vector2u& /* minimumSize */)
+{
+    // Not applicable
+}
+
+
+////////////////////////////////////////////////////////////
+void WindowImplUIKit::setMaximumSize(const Vector2u& /* maximumSize */)
+{
+    // Not applicable
+}
+
+
+////////////////////////////////////////////////////////////
 void WindowImplUIKit::setTitle(const String& /* title */)
 {
     // Not applicable

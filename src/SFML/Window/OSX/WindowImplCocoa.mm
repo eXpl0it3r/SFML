@@ -436,6 +436,7 @@ void WindowImplCocoa::setSize(const Vector2u& size)
     [m_delegate resizeTo:backingSize.x by:backingSize.y];
 }
 
+
 ////////////////////////////////////////////////////////////
 void WindowImplCocoa::setMinimumSize(const Vector2u& minimumSize)
 {
@@ -445,6 +446,7 @@ void WindowImplCocoa::setMinimumSize(const Vector2u& minimumSize)
     AutoreleasePool pool;
     [m_delegate setMinimumSize:NSMakeSize(minimumSize.x, minimumSize.y)];
 }
+
 
 ////////////////////////////////////////////////////////////
 void WindowImplCocoa::setMaximumSize(const Vector2u& maximumSize)

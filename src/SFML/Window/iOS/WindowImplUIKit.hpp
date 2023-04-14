@@ -106,6 +106,22 @@ public:
     void setSize(const Vector2u& size) override;
 
     ////////////////////////////////////////////////////////////
+    /// \brief Sets a minimum window rendering region size
+    ///
+    /// \param minimumSize New minimum size, in pixels
+    ///
+    ////////////////////////////////////////////////////////////
+    void setMinimumSize(const Vector2u& minimumSize) override;
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Sets a maximum window rendering region size
+    ///
+    /// \param maximumSize New maximum size, in pixels
+    ///
+    ////////////////////////////////////////////////////////////
+    void setMaximumSize(const Vector2u& maximumSize) override;
+
+    ////////////////////////////////////////////////////////////
     /// \brief Change the title of the window
     ///
     /// \param title New title
