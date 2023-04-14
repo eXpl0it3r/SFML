@@ -827,12 +827,6 @@ Vector2u WindowImplX11::getSize() const
 ////////////////////////////////////////////////////////////
 void WindowImplX11::setSize(const Vector2u& size)
 {
-    // We could set the min and max to the new size in its respective dimension if setSize violates
-    // previously set min and max sizes
-    assert(size.x >= m_minimumSize.x);
-    assert(size.y >= m_minimumSize.y);
-    assert(size.x <= m_maximumSize.x);
-    assert(size.y <= m_maximumSize.y);
     // If resizing is disable for the window we have to update the size hints (required by some window managers).
     if (m_useSizeHints)
     {
@@ -848,27 +842,10 @@ void WindowImplX11::setSize(const Vector2u& size)
     XFlush(m_display);
 }
 
-namespace
-{
-void setWindowSizeConstraints(::Window window, ::Display* display, const Vector2u& minimumSize, const Vector2u& maximumSize)
-{
-    XSizeHints* sizeHints = XAllocSizeHints();
-    sizeHints->flags      = PMinSize | PMaxSize;
-    sizeHints->min_width  = static_cast<int>(minimumSize.x);
-    sizeHints->min_height = static_cast<int>(minimumSize.y);
-    sizeHints->max_width  = static_cast<int>(maximumSize.x);
-    sizeHints->max_height = static_cast<int>(maximumSize.y);
-    XSetWMNormalHints(display, window, sizeHints);
-    XFree(sizeHints);
-}
-} // namespace
 
 ////////////////////////////////////////////////////////////
-void WindowImplX11::setMinimumSize(const Vector2u& minimumSize)
+void WindowImplX11::setMinimumSize(const std::optional<Vector2u>& minimumSize)
 {
-    assert(minimumSize.x <= m_maximumSize.x);
-    assert(minimumSize.y <= m_maximumSize.y);
-
     // Not sure what to do when resizing is disabled.
     // Ignore setMinimumSize is what I would recommend
     if (m_useSizeHints)
@@ -878,16 +855,13 @@ void WindowImplX11::setMinimumSize(const Vector2u& minimumSize)
     else
     {
         m_minimumSize = minimumSize;
-        setWindowSizeConstraints(m_window, m_display, m_minimumSize, m_maximumSize);
+        setWindowSizeConstraints();
     }
 }
 
 ////////////////////////////////////////////////////////////
-void WindowImplX11::setMaximumSize(const Vector2u& maximumSize)
+void WindowImplX11::setMaximumSize(const std::optional<Vector2u>& maximumSize)
 {
-    assert(maximumSize.x >= m_minimumSize.x);
-    assert(maximumSize.y >= m_minimumSize.y);
-
     // Not sure what to do when resizing is disabled.
     // Ignore setMaximumSize is what I would recommend
     if (m_useSizeHints)
@@ -897,7 +871,7 @@ void WindowImplX11::setMaximumSize(const Vector2u& maximumSize)
     else
     {
         m_maximumSize = maximumSize;
-        setWindowSizeConstraints(m_window, m_display, m_minimumSize, m_maximumSize);
+        setWindowSizeConstraints();
     }
 }
 
@@ -2195,6 +2169,23 @@ Vector2i WindowImplX11::getPrimaryMonitorPosition()
     XRRFreeScreenResources(res);
 
     return monitorPosition;
+}
+
+
+////////////////////////////////////////////////////////////
+void WindowImplX11::setWindowSizeConstraints();
+{
+    static constexpr sf::Vector2u defaultMaximumSize(std::numeric_limits<unsinged int>::max(),
+                                                     std::numeric_limits<unsinged int>::max());
+
+    XSizeHints* sizeHints = XAllocSizeHints();
+    sizeHints->flags      = PMinSize | PMaxSize;
+    sizeHints->min_width  = static_cast<int>(m_minimumSize.value_or({})->x);
+    sizeHints->min_height = static_cast<int>(m_minimumSize.value_or({})->y);
+    sizeHints->max_width  = static_cast<int>(m_maximumSize.value_or(defaultMaximumSize)->x);
+    sizeHints->max_height = static_cast<int>(m_maximumSize.value_or(defaultMaximumSize)->y);
+    XSetWMNormalHints(m_display, m_window, sizeHints);
+    XFree(sizeHints);
 }
 
 } // namespace sf::priv

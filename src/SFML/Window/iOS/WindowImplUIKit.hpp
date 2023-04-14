@@ -111,7 +111,7 @@ public:
     /// \param minimumSize New minimum size, in pixels
     ///
     ////////////////////////////////////////////////////////////
-    void setMinimumSize(const Vector2u& minimumSize) override;
+    void setMinimumSize(const std::optional<Vector2u>& minimumSize) override;
 
     ////////////////////////////////////////////////////////////
     /// \brief Sets a maximum window rendering region size
@@ -119,7 +119,7 @@ public:
     /// \param maximumSize New maximum size, in pixels
     ///
     ////////////////////////////////////////////////////////////
-    void setMaximumSize(const Vector2u& maximumSize) override;
+    void setMaximumSize(const std::optional<Vector2u>& maximumSize) override;
 
     ////////////////////////////////////////////////////////////
     /// \brief Change the title of the window

@@ -117,7 +117,7 @@ public:
     /// \param minimumSize New minimum size, in pixels
     ///
     ////////////////////////////////////////////////////////////
-    void setMinimumSize(const Vector2u& minimumSize) override;
+    void setMinimumSize(const std::optional<Vector2u>& minimumSize) override;
 
     ////////////////////////////////////////////////////////////
     /// \brief Sets a maximum window rendering region size
@@ -125,7 +125,7 @@ public:
     /// \param maximumSize New maximum size, in pixels
     ///
     ////////////////////////////////////////////////////////////
-    void setMaximumSize(const Vector2u& maximumSize) override;
+    void setMaximumSize(const std::optional<Vector2u>& maximumSize) override;
 
     ////////////////////////////////////////////////////////////
     /// \brief Change the title of the window
@@ -308,6 +308,12 @@ private:
     Vector2i getPrimaryMonitorPosition();
 
     ////////////////////////////////////////////////////////////
+    /// \brief Set min/max window size
+    ///
+    ////////////////////////////////////////////////////////////
+    void setWindowSizeConstraints();
+
+    ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
     ::Window   m_window{};       ///< X identifier defining our window
@@ -322,15 +328,13 @@ private:
     ::Cursor m_lastCursor{None}; ///< Last cursor used -- this data is not owned by the window and is required to be always valid
     bool     m_keyRepeat{true}; ///< Is the KeyRepeat feature enabled?
     Vector2i m_previousSize{-1, -1}; ///< Previous size of the window, to find if a ConfigureNotify event is a resize event (could be a move event only)
-    Vector2u m_minimumSize{0, 0};                   ///< Minimum size the rendering region of the window can be
-    Vector2u m_maximumSize{0xFFFFFFFF, 0xFFFFFFFF}; ///< Maximum size the rendering region of the window can be
-    bool     m_useSizeHints{};                      ///< Is the size of the window fixed with size hints?
-    bool     m_fullscreen{};                        ///< Is the window in fullscreen?
-    bool     m_cursorGrabbed{};                     ///< Is the mouse cursor trapped?
-    bool     m_windowMapped{};                      ///< Has the window been mapped by the window manager?
-    Pixmap   m_iconPixmap{};                        ///< The current icon pixmap if in use
-    Pixmap   m_iconMaskPixmap{};                    ///< The current icon mask pixmap if in use
-    ::Time   m_lastInputTime{};                     ///< Last time we received user input
+    bool     m_useSizeHints{};   ///< Is the size of the window fixed with size hints?
+    bool     m_fullscreen{};     ///< Is the window in fullscreen?
+    bool     m_cursorGrabbed{};  ///< Is the mouse cursor trapped?
+    bool     m_windowMapped{};   ///< Has the window been mapped by the window manager?
+    Pixmap   m_iconPixmap{};     ///< The current icon pixmap if in use
+    Pixmap   m_iconMaskPixmap{}; ///< The current icon mask pixmap if in use
+    ::Time   m_lastInputTime{};  ///< Last time we received user input
 };
 
 } // namespace sf::priv

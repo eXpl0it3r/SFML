@@ -36,6 +36,7 @@
 #include <SFML/System/Vector2.hpp>
 
 #include <memory>
+#include <optional>
 
 
 namespace sf
@@ -261,7 +262,7 @@ public:
     /// \param minimumSize New minimum size, in pixels
     ///
     ////////////////////////////////////////////////////////////
-    void setMinimumSize(const Vector2u& minimumSize);
+    void setMinimumSize(const std::optional<Vector2u>& minimumSize);
 
     ////////////////////////////////////////////////////////////
     /// \brief Sets a maximum window rendering region size
@@ -269,7 +270,7 @@ public:
     /// \param maximumSize New maximum size, in pixels
     ///
     ////////////////////////////////////////////////////////////
-    void setMaximumSize(const Vector2u& maximumSize);
+    void setMaximumSize(const std::optional<Vector2u>& maximumSize);
 
     ////////////////////////////////////////////////////////////
     /// \brief Change the title of the window

@@ -341,17 +341,15 @@ void WindowImplWin32::setSize(const Vector2u& size)
 
 
 ////////////////////////////////////////////////////////////
-void WindowImplWin32::setMinimumSize(const Vector2u& minimumSize)
+void WindowImplWin32::setMinimumSize(const std::optional<Vector2u>& minimumSize)
 {
-    m_minimumSize.x = minimumSize.x;
-    m_minimumSize.y = minimumSize.y;
+    m_minimumSize = minimumSize;
 }
 
 ////////////////////////////////////////////////////////////
-void WindowImplWin32::setMaximumSize(const Vector2u& maximumSize)
+void WindowImplWin32::setMaximumSize(const std::optional<Vector2u>& maximumSize)
 {
-    m_maximumSize.x = maximumSize.x;
-    m_maximumSize.y = maximumSize.y;
+    m_maximumSize = maximumSize;
 }
 
 ////////////////////////////////////////////////////////////
@@ -793,53 +791,53 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
             }
 
 
-            if (width < m_minimumSize.x)
+            if (m_minimumSize && width < m_minimumSize->x)
             {
                 // we don't like this
                 if (isLeft)
                 {
-                    ncsRect->left = ncsRect->right - static_cast<LONG>(m_minimumSize.x);
+                    ncsRect->left = ncsRect->right - static_cast<LONG>(m_minimumSize->x);
                 }
                 else
                 {
-                    ncsRect->right = ncsRect->left + static_cast<LONG>(m_minimumSize.x);
+                    ncsRect->right = ncsRect->left + static_cast<LONG>(m_minimumSize->x);
                 }
             }
-            else if (width > m_maximumSize.x && m_maximumSize.x != 0)
+            else if (m_maximumSize && width > m_maximumSize->x && m_maximumSize->x != 0)
             {
                 // we also don't like this either
                 if (isLeft)
                 {
-                    ncsRect->left = ncsRect->right - static_cast<LONG>(m_maximumSize.x);
+                    ncsRect->left = ncsRect->right - static_cast<LONG>(m_maximumSize->x);
                 }
                 else
                 {
-                    ncsRect->right = ncsRect->left + static_cast<LONG>(m_maximumSize.x);
+                    ncsRect->right = ncsRect->left + static_cast<LONG>(m_maximumSize->x);
                 }
             }
 
-            if (height < m_minimumSize.y)
+            if (m_minimumSize && height < m_minimumSize->y)
             {
                 // we don't like this
                 if (isTop)
                 {
-                    ncsRect->top = ncsRect->bottom - static_cast<LONG>(m_minimumSize.y);
+                    ncsRect->top = ncsRect->bottom - static_cast<LONG>(m_minimumSize->y);
                 }
                 else
                 {
-                    ncsRect->bottom = ncsRect->top + static_cast<LONG>(m_minimumSize.y);
+                    ncsRect->bottom = ncsRect->top + static_cast<LONG>(m_minimumSize->y);
                 }
             }
-            else if (height > m_maximumSize.y && m_maximumSize.y != 0)
+            else if (m_maximumSize && height > m_maximumSize->y && m_maximumSize->y != 0)
             {
                 // we also don't like this
                 if (isTop)
                 {
-                    ncsRect->top = ncsRect->bottom - static_cast<LONG>(m_maximumSize.y);
+                    ncsRect->top = ncsRect->bottom - static_cast<LONG>(m_maximumSize->y);
                 }
                 else
                 {
-                    ncsRect->bottom = ncsRect->top + static_cast<LONG>(m_maximumSize.y);
+                    ncsRect->bottom = ncsRect->top + static_cast<LONG>(m_maximumSize->y);
                 }
             }
 

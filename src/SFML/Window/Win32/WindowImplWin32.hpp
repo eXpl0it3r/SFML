@@ -117,7 +117,7 @@ public:
     /// \param size New minimum size, in pixels
     ///
     ////////////////////////////////////////////////////////////
-    void setMinimumSize(const Vector2u& minimumSize) override;
+    void setMinimumSize(const std::optional<Vector2u>& minimumSize) override;
 
     ////////////////////////////////////////////////////////////
     /// \brief Set the maximum size of the window, preventing it from being user-resized to bigger than this. 0,0 (default) means no maximum.
@@ -125,7 +125,7 @@ public:
     /// \param size New maximum size, in pixels
     ///
     ////////////////////////////////////////////////////////////
-    void setMaximumSize(const Vector2u& maximumSize) override;
+    void setMaximumSize(const std::optional<Vector2u>& maximumSize) override;
 
     ////////////////////////////////////////////////////////////
     /// \brief Change the title of the window
@@ -305,11 +305,11 @@ private:
     Vector2u m_lastSize;               //!< The last handled size of the window
     bool     m_resizing{};             //!< Is the window being resized?
     std::uint16_t m_surrogate{}; //!< First half of the surrogate pair, in case we're receiving a Unicode character in two events
-    bool          m_mouseInside{};   //!< Mouse is inside the window?
-    bool          m_fullscreen{};    //!< Is the window fullscreen?
-    bool          m_cursorGrabbed{}; //!< Is the mouse cursor trapped?
-    Vector2u m_minimumSize{};        //!< The minimum size of a window, as set by setMinimumSize(Vector2u&)
-    Vector2u m_maximumSize{};        //!< The maximum size of a window, as set by setMaximumSize(Vector2u&)
+    bool          m_mouseInside{};         //!< Mouse is inside the window?
+    bool          m_fullscreen{};          //!< Is the window fullscreen?
+    bool          m_cursorGrabbed{};       //!< Is the mouse cursor trapped?
+    std::optional<Vector2u> m_minimumSize; //!< Minimum window size
+    std::optional<Vector2u> m_maximumSize; //!< Maximum window size
 };
 
 } // namespace priv

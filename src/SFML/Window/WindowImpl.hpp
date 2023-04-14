@@ -40,6 +40,7 @@
 #include <SFML/Window/WindowHandle.hpp>
 
 #include <memory>
+#include <optional>
 #include <queue>
 #include <set>
 
@@ -172,7 +173,7 @@ public:
     /// \param minimumSize New minimum size, in pixels
     ///
     ////////////////////////////////////////////////////////////
-    virtual void setMinimumSize(const Vector2u& minimumSize) = 0;
+    virtual void setMinimumSize(const std::optional<Vector2u>& minimumSize) = 0;
 
     ////////////////////////////////////////////////////////////
     /// \brief Sets a maximum window rendering region size
@@ -180,7 +181,7 @@ public:
     /// \param maximumSize New maximum size, in pixels
     ///
     ////////////////////////////////////////////////////////////
-    virtual void setMaximumSize(const Vector2u& maximumSize) = 0;
+    virtual void setMaximumSize(const std::optional<Vector2u>& maximumSize) = 0;
 
     ////////////////////////////////////////////////////////////
     /// \brief Change the title of the window

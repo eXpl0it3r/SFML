@@ -219,7 +219,7 @@ void WindowBase::setSize(const Vector2u& size)
 }
 
 ////////////////////////////////////////////////////////////
-void WindowBase::setMinimumSize(const Vector2u& minimumSize)
+void WindowBase::setMinimumSize(const std::optional<Vector2u>& minimumSize)
 {
     if (m_impl)
     {
@@ -228,7 +228,7 @@ void WindowBase::setMinimumSize(const Vector2u& minimumSize)
 }
 
 ////////////////////////////////////////////////////////////
-void WindowBase::setMaximumSize(const Vector2u& maximumSize)
+void WindowBase::setMaximumSize(const std::optional<Vector2u>& maximumSize)
 {
     if (m_impl)
     {
