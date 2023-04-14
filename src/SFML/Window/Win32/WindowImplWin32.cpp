@@ -798,11 +798,11 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
                 // we don't like this
                 if (isLeft)
                 {
-                    ncsRect->left = ncsRect->right - m_minimumSize.x;
+                    ncsRect->left = ncsRect->right - static_cast<LONG>(m_minimumSize.x);
                 }
                 else
                 {
-                    ncsRect->right = ncsRect->left + m_minimumSize.x;
+                    ncsRect->right = ncsRect->left + static_cast<LONG>(m_minimumSize.x);
                 }
             }
             else if (width > m_maximumSize.x && m_maximumSize.x != 0)
@@ -810,11 +810,11 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
                 // we also don't like this either
                 if (isLeft)
                 {
-                    ncsRect->left = ncsRect->right - m_maximumSize.x;
+                    ncsRect->left = ncsRect->right - static_cast<LONG>(m_maximumSize.x);
                 }
                 else
                 {
-                    ncsRect->right = ncsRect->left + m_maximumSize.x;
+                    ncsRect->right = ncsRect->left + static_cast<LONG>(m_maximumSize.x);
                 }
             }
 
@@ -823,11 +823,11 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
                 // we don't like this
                 if (isTop)
                 {
-                    ncsRect->top = ncsRect->bottom - m_minimumSize.y;
+                    ncsRect->top = ncsRect->bottom - static_cast<LONG>(m_minimumSize.y);
                 }
                 else
                 {
-                    ncsRect->bottom = ncsRect->top + m_minimumSize.y;
+                    ncsRect->bottom = ncsRect->top + static_cast<LONG>(m_minimumSize.y);
                 }
             }
             else if (height > m_maximumSize.y && m_maximumSize.y != 0)
@@ -835,11 +835,11 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
                 // we also don't like this
                 if (isTop)
                 {
-                    ncsRect->top = ncsRect->bottom - m_maximumSize.y;
+                    ncsRect->top = ncsRect->bottom - static_cast<LONG>(m_maximumSize.y);
                 }
                 else
                 {
-                    ncsRect->bottom = ncsRect->top + m_maximumSize.y;
+                    ncsRect->bottom = ncsRect->top + static_cast<LONG>(m_maximumSize.y);
                 }
             }
 
