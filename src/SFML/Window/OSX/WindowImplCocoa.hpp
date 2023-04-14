@@ -280,6 +280,22 @@ public:
     void setSize(const Vector2u& size) override;
 
     ////////////////////////////////////////////////////////////
+    /// \brief Sets a minimum window rendering region size
+    ///
+    /// \param minimumSize New minimum size, in pixels
+    ///
+    ////////////////////////////////////////////////////////////
+    void setMinimumSize(const Vector2u& minimumSize) override;
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Sets a maximum window rendering region size
+    ///
+    /// \param maximumSize New maximum size, in pixels
+    ///
+    ////////////////////////////////////////////////////////////
+    void setMaximumSize(const Vector2u& maximumSize) override;
+
+    ////////////////////////////////////////////////////////////
     /// \brief Change the title of the window
     ///
     /// \param title New title
@@ -362,8 +378,10 @@ private:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    WindowImplDelegateRef m_delegate;         ///< Implementation in Obj-C.
-    bool                  m_showCursor{true}; ///< Is the cursor displayed or hidden?
+    WindowImplDelegateRef m_delegate;               ///< Implementation in Obj-C.
+    bool                  m_showCursor{true};       ///< Is the cursor displayed or hidden?
+    Vector2u              m_minimumSize{0, 0};      ///< Minimum size the rendering region of the window can be
+    Vector2u m_maximumSize{0xFFFFFFFF, 0xFFFFFFFF}; ///< Maximum size the rendering region of the window can be
 };
 
 } // namespace priv
