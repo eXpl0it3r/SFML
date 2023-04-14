@@ -125,7 +125,7 @@ public:
     /// \param size New maximum size, in pixels
     ///
     ////////////////////////////////////////////////////////////
-    void setMaximumSize(const Vector2u& minimumSize) override;
+    void setMaximumSize(const Vector2u& maximumSize) override;
 
     ////////////////////////////////////////////////////////////
     /// \brief Change the title of the window
