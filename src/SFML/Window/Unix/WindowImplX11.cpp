@@ -2175,16 +2175,22 @@ Vector2i WindowImplX11::getPrimaryMonitorPosition()
 ////////////////////////////////////////////////////////////
 void WindowImplX11::setWindowSizeConstraints()
 {
-    const auto minimumSize = m_minimumSize.value_or(sf::Vector2u());
-    const auto maximumSize = m_maximumSize.value_or(
-        sf::Vector2u(std::numeric_limits<unsigned int>::max(), std::numeric_limits<unsigned int>::max()));
-
     XSizeHints* sizeHints = XAllocSizeHints();
-    sizeHints->flags      = PMinSize | PMaxSize;
-    sizeHints->min_width  = static_cast<int>(minimumSize.x);
-    sizeHints->min_height = static_cast<int>(minimumSize.y);
-    sizeHints->max_width  = static_cast<int>(maximumSize.x);
-    sizeHints->max_height = static_cast<int>(maximumSize.y);
+    if (m_minimumSize.has_value())
+    {
+        const auto minimumSize = m_minimumSize.value_or(sf::Vector2u());
+        sizeHints->flags |= PMinSize;        
+        sizeHints->min_width  = static_cast<int>(minimumSize.x);
+        sizeHints->min_height = static_cast<int>(minimumSize.y);
+    }
+    if (m_maximumSize.has_value())
+    {
+        const auto maximumSize = m_maximumSize.value_or(
+            sf::Vector2u(std::numeric_limits<unsigned int>::max(), std::numeric_limits<unsigned int>::max()));   
+        sizeHints->flags |= PMaxSize;
+        sizeHints->max_width  = static_cast<int>(maximumSize.x);
+        sizeHints->max_height = static_cast<int>(maximumSize.y);
+    }
     XSetWMNormalHints(m_display, m_window, sizeHints);
     XFree(sizeHints);
 }
