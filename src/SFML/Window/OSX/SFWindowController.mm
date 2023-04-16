@@ -483,14 +483,14 @@
 ////////////////////////////////////////////////////////
 - (void)setMinimumSize:(NSSize)size
 {
-    [m_window setMinSize:size];
+    [m_window setContentMinSize:size];
 }
 
 
 ////////////////////////////////////////////////////////
 - (void)setMaximumSize:(NSSize)size
 {
-    [m_window setMaxSize:size];
+    [m_window setContentMaxSize:size];
 }
 
 
