@@ -760,7 +760,7 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
             break;
         }
 
-        // tell OS whether we're happy with the proposed changes to the window size
+        // Tell OS whether we're happy with the proposed changes to the window size
         case WM_SIZING:
         {
             RECT* ncsRect = reinterpret_cast<RECT*>(lParam);
