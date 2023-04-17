@@ -112,7 +112,7 @@ public:
     void setSize(const Vector2u& size) override;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Set the minimum size of the window, preventing it from being user-resized to smaller than this. Defaults to 0,0
+    /// \brief Sets a minimum window rendering region size
     ///
     /// \param size New minimum size, in pixels
     ///
