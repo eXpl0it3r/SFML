@@ -120,7 +120,7 @@ public:
     void setMinimumSize(const std::optional<Vector2u>& minimumSize) override;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Set the maximum size of the window, preventing it from being user-resized to bigger than this. 0,0 (default) means no maximum.
+    /// \brief Sets a maximum window rendering region size
     ///
     /// \param size New maximum size, in pixels
     ///
