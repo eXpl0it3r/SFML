@@ -52,6 +52,7 @@
 #include <fcntl.h>
 #include <filesystem>
 #include <libgen.h>
+#include <limits>
 #include <mutex>
 #include <ostream>
 #include <string>
