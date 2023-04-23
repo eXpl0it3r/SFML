@@ -766,11 +766,9 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
             RECT* ncsRect = reinterpret_cast<RECT*>(lParam);
             assert(ncsRect->left < ncsRect->right);
             assert(ncsRect->top < ncsRect->bottom);
-            auto width            = static_cast<unsigned int>(ncsRect->right - ncsRect->left);
-            auto height           = static_cast<unsigned int>(ncsRect->bottom - ncsRect->top);
+
             bool resizingFromTop  = false;
             bool resizingFromLeft = false;
-
             switch (wParam)
             {
                 case WMSZ_BOTTOMLEFT:
@@ -791,6 +789,8 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
                     break;
             }
 
+            const auto width  = static_cast<unsigned int>(ncsRect->right - ncsRect->left);
+            const auto height = static_cast<unsigned int>(ncsRect->bottom - ncsRect->top);
             if (m_minimumSize.has_value())
             {
                 // Requested width is too narrow
