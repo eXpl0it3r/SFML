@@ -763,9 +763,9 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
         // Tell OS whether we're happy with the proposed changes to the window size
         case WM_SIZING:
         {
-            RECT* ncsRect = reinterpret_cast<RECT*>(lParam);
-            assert(ncsRect->left < ncsRect->right);
-            assert(ncsRect->top < ncsRect->bottom);
+            RECT& ncsRect = *reinterpret_cast<PRECT>(lParam);
+            assert(ncsRect.left < ncsRect.right);
+            assert(ncsRect.top < ncsRect.bottom);
 
             bool resizingFromTop  = false;
             bool resizingFromLeft = false;
@@ -789,26 +789,26 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
                     break;
             }
 
-            const auto width  = static_cast<unsigned int>(ncsRect->right - ncsRect->left);
-            const auto height = static_cast<unsigned int>(ncsRect->bottom - ncsRect->top);
+            const auto width  = static_cast<unsigned int>(ncsRect.right - ncsRect.left);
+            const auto height = static_cast<unsigned int>(ncsRect.bottom - ncsRect.top);
             if (m_minimumSize.has_value())
             {
                 // Requested width is too narrow
                 if (width < m_minimumSize->x)
                 {
                     if (resizingFromLeft)
-                        ncsRect->left = ncsRect->right - static_cast<LONG>(m_minimumSize->x);
+                        ncsRect.left = ncsRect.right - static_cast<LONG>(m_minimumSize->x);
                     else
-                        ncsRect->right = ncsRect->left + static_cast<LONG>(m_minimumSize->x);
+                        ncsRect.right = ncsRect.left + static_cast<LONG>(m_minimumSize->x);
                 }
 
                 // Requested height is too short
                 if (height < m_minimumSize->y)
                 {
                     if (resizingFromTop)
-                        ncsRect->top = ncsRect->bottom - static_cast<LONG>(m_minimumSize->y);
+                        ncsRect.top = ncsRect.bottom - static_cast<LONG>(m_minimumSize->y);
                     else
-                        ncsRect->bottom = ncsRect->top + static_cast<LONG>(m_minimumSize->y);
+                        ncsRect.bottom = ncsRect.top + static_cast<LONG>(m_minimumSize->y);
                 }
             }
 
@@ -818,18 +818,18 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
                 if (width > m_maximumSize->x)
                 {
                     if (resizingFromLeft)
-                        ncsRect->left = ncsRect->right - static_cast<LONG>(m_maximumSize->x);
+                        ncsRect.left = ncsRect.right - static_cast<LONG>(m_maximumSize->x);
                     else
-                        ncsRect->right = ncsRect->left + static_cast<LONG>(m_maximumSize->x);
+                        ncsRect.right = ncsRect.left + static_cast<LONG>(m_maximumSize->x);
                 }
 
                 // Requested height is too tall
                 if (height > m_maximumSize->y)
                 {
                     if (resizingFromTop)
-                        ncsRect->top = ncsRect->bottom - static_cast<LONG>(m_maximumSize->y);
+                        ncsRect.top = ncsRect.bottom - static_cast<LONG>(m_maximumSize->y);
                     else
-                        ncsRect->bottom = ncsRect->top + static_cast<LONG>(m_maximumSize->y);
+                        ncsRect.bottom = ncsRect.top + static_cast<LONG>(m_maximumSize->y);
                 }
             }
 
