@@ -766,27 +766,28 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
             RECT* ncsRect = reinterpret_cast<RECT*>(lParam);
             assert(ncsRect->left < ncsRect->right);
             assert(ncsRect->top < ncsRect->bottom);
-            auto width  = static_cast<unsigned int>(ncsRect->right - ncsRect->left);
-            auto height = static_cast<unsigned int>(ncsRect->bottom - ncsRect->top);
-            bool isTop  = false; // are we being resized on the top? If not, it's the bottom
-            bool isLeft = false; // are we being resized on the left? If not, it's the right
+            auto width            = static_cast<unsigned int>(ncsRect->right - ncsRect->left);
+            auto height           = static_cast<unsigned int>(ncsRect->bottom - ncsRect->top);
+            bool resizingFromTop  = false; // are we being resized on the top? If not, it's the bottom
+            bool resizingFromLeft = false; // are we being resized on the left? If not, it's the right
+
             switch (wParam)
             {
                 case WMSZ_BOTTOMLEFT:
-                    isLeft = true;
+                    resizingFromLeft = true;
                     break;
                 case WMSZ_TOPLEFT:
-                    isLeft = true;
-                    isTop  = true;
+                    resizingFromLeft = true;
+                    resizingFromTop  = true;
                     break;
                 case WMSZ_LEFT:
-                    isLeft = true;
+                    resizingFromLeft = true;
                     break;
                 case WMSZ_TOPRIGHT:
-                    isTop = true;
+                    resizingFromTop = true;
                     break;
                 case WMSZ_TOP:
-                    isTop = true;
+                    resizingFromTop = true;
                     break;
             }
 
@@ -794,7 +795,7 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
             if (m_minimumSize && width < m_minimumSize->x)
             {
                 // we don't like this
-                if (isLeft)
+                if (resizingFromLeft)
                 {
                     ncsRect->left = ncsRect->right - static_cast<LONG>(m_minimumSize->x);
                 }
@@ -806,7 +807,7 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
             else if (m_maximumSize && width > m_maximumSize->x && m_maximumSize->x != 0)
             {
                 // we also don't like this either
-                if (isLeft)
+                if (resizingFromLeft)
                 {
                     ncsRect->left = ncsRect->right - static_cast<LONG>(m_maximumSize->x);
                 }
@@ -819,7 +820,7 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
             if (m_minimumSize && height < m_minimumSize->y)
             {
                 // we don't like this
-                if (isTop)
+                if (resizingFromTop)
                 {
                     ncsRect->top = ncsRect->bottom - static_cast<LONG>(m_minimumSize->y);
                 }
@@ -831,7 +832,7 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
             else if (m_maximumSize && height > m_maximumSize->y && m_maximumSize->y != 0)
             {
                 // we also don't like this
-                if (isTop)
+                if (resizingFromTop)
                 {
                     ncsRect->top = ncsRect->bottom - static_cast<LONG>(m_maximumSize->y);
                 }
