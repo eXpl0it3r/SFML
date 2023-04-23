@@ -760,7 +760,7 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
             break;
         }
 
-        // Tell OS whether we're happy with the proposed changes to the window size
+        // Fix violations of minimum or maximum size
         case WM_SIZING:
         {
             RECT& ncsRect = *reinterpret_cast<PRECT>(lParam);
@@ -789,47 +789,45 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
                     break;
             }
 
-            const auto width  = static_cast<unsigned int>(ncsRect.right - ncsRect.left);
-            const auto height = static_cast<unsigned int>(ncsRect.bottom - ncsRect.top);
+            const auto width  = ncsRect.right - ncsRect.left;
+            const auto height = ncsRect.bottom - ncsRect.top;
             if (m_minimumSize.has_value())
             {
-                // Requested width is too narrow
-                if (width < m_minimumSize->x)
+                const auto [minimumWidth, minimumHeight] = Vector2<LONG>(m_minimumSize.value());
+
+                if (width < minimumWidth)
                 {
                     if (resizingFromLeft)
-                        ncsRect.left = ncsRect.right - static_cast<LONG>(m_minimumSize->x);
+                        ncsRect.left = ncsRect.right - minimumWidth;
                     else
-                        ncsRect.right = ncsRect.left + static_cast<LONG>(m_minimumSize->x);
+                        ncsRect.right = ncsRect.left + minimumWidth;
                 }
-
-                // Requested height is too short
-                if (height < m_minimumSize->y)
+                if (height < minimumHeight)
                 {
                     if (resizingFromTop)
-                        ncsRect.top = ncsRect.bottom - static_cast<LONG>(m_minimumSize->y);
+                        ncsRect.top = ncsRect.bottom - minimumHeight;
                     else
-                        ncsRect.bottom = ncsRect.top + static_cast<LONG>(m_minimumSize->y);
+                        ncsRect.bottom = ncsRect.top + minimumHeight;
                 }
             }
 
             if (m_maximumSize.has_value())
             {
-                // Requested width is too wide
-                if (width > m_maximumSize->x)
+                const auto [maximumWidth, maximumHeight] = Vector2<LONG>(m_maximumSize.value());
+
+                if (width > maximumWidth)
                 {
                     if (resizingFromLeft)
-                        ncsRect.left = ncsRect.right - static_cast<LONG>(m_maximumSize->x);
+                        ncsRect.left = ncsRect.right - maximumWidth;
                     else
-                        ncsRect.right = ncsRect.left + static_cast<LONG>(m_maximumSize->x);
+                        ncsRect.right = ncsRect.left + maximumWidth;
                 }
-
-                // Requested height is too tall
-                if (height > m_maximumSize->y)
+                if (height > maximumHeight)
                 {
                     if (resizingFromTop)
-                        ncsRect.top = ncsRect.bottom - static_cast<LONG>(m_maximumSize->y);
+                        ncsRect.top = ncsRect.bottom - maximumHeight;
                     else
-                        ncsRect.bottom = ncsRect.top + static_cast<LONG>(m_maximumSize->y);
+                        ncsRect.bottom = ncsRect.top + maximumHeight;
                 }
             }
 
