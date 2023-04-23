@@ -791,40 +791,46 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
                     break;
             }
 
-            // Requested width is narrower than minimum width
-            if (m_minimumSize && width < m_minimumSize->x)
+            if (m_minimumSize.has_value())
             {
-                if (resizingFromLeft)
-                    ncsRect->left = ncsRect->right - static_cast<LONG>(m_minimumSize->x);
-                else
-                    ncsRect->right = ncsRect->left + static_cast<LONG>(m_minimumSize->x);
+                // Requested width is too narrow
+                if (width < m_minimumSize->x)
+                {
+                    if (resizingFromLeft)
+                        ncsRect->left = ncsRect->right - static_cast<LONG>(m_minimumSize->x);
+                    else
+                        ncsRect->right = ncsRect->left + static_cast<LONG>(m_minimumSize->x);
+                }
+
+                // Requested height is too short
+                if (height < m_minimumSize->y)
+                {
+                    if (resizingFromTop)
+                        ncsRect->top = ncsRect->bottom - static_cast<LONG>(m_minimumSize->y);
+                    else
+                        ncsRect->bottom = ncsRect->top + static_cast<LONG>(m_minimumSize->y);
+                }
             }
 
-            // Requested width is wider than maximum width
-            if (m_maximumSize && width > m_maximumSize->x && m_maximumSize->x != 0)
+            if (m_maximumSize.has_value())
             {
-                if (resizingFromLeft)
-                    ncsRect->left = ncsRect->right - static_cast<LONG>(m_maximumSize->x);
-                else
-                    ncsRect->right = ncsRect->left + static_cast<LONG>(m_maximumSize->x);
-            }
+                // Requested width is too wide
+                if (width > m_maximumSize->x)
+                {
+                    if (resizingFromLeft)
+                        ncsRect->left = ncsRect->right - static_cast<LONG>(m_maximumSize->x);
+                    else
+                        ncsRect->right = ncsRect->left + static_cast<LONG>(m_maximumSize->x);
+                }
 
-            // Requested height is shorter than minimum height
-            if (m_minimumSize && height < m_minimumSize->y)
-            {
-                if (resizingFromTop)
-                    ncsRect->top = ncsRect->bottom - static_cast<LONG>(m_minimumSize->y);
-                else
-                    ncsRect->bottom = ncsRect->top + static_cast<LONG>(m_minimumSize->y);
-            }
-
-            // Requested height is taller than maximum height
-            if (m_maximumSize && height > m_maximumSize->y && m_maximumSize->y != 0)
-            {
-                if (resizingFromTop)
-                    ncsRect->top = ncsRect->bottom - static_cast<LONG>(m_maximumSize->y);
-                else
-                    ncsRect->bottom = ncsRect->top + static_cast<LONG>(m_maximumSize->y);
+                // Requested height is too tall
+                if (height > m_maximumSize->y)
+                {
+                    if (resizingFromTop)
+                        ncsRect->top = ncsRect->bottom - static_cast<LONG>(m_maximumSize->y);
+                    else
+                        ncsRect->bottom = ncsRect->top + static_cast<LONG>(m_maximumSize->y);
+                }
             }
 
             break;
