@@ -38,6 +38,7 @@
 // expects lowercase, and a native compile on windows, whether via msvc
 // or mingw-w64 addresses files in a case insensitive manner.
 #include <dbt.h>
+#include <limits>
 #include <ostream>
 #include <vector>
 
@@ -760,80 +761,6 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
             break;
         }
 
-        // Fix violations of minimum or maximum size
-        case WM_SIZING:
-        {
-            RECT& ncsRect = *reinterpret_cast<PRECT>(lParam);
-            assert(ncsRect.left < ncsRect.right);
-            assert(ncsRect.top < ncsRect.bottom);
-
-            bool resizingFromTop  = false;
-            bool resizingFromLeft = false;
-            switch (wParam)
-            {
-                case WMSZ_BOTTOMLEFT:
-                    resizingFromLeft = true;
-                    break;
-                case WMSZ_TOPLEFT:
-                    resizingFromLeft = true;
-                    resizingFromTop  = true;
-                    break;
-                case WMSZ_LEFT:
-                    resizingFromLeft = true;
-                    break;
-                case WMSZ_TOPRIGHT:
-                    resizingFromTop = true;
-                    break;
-                case WMSZ_TOP:
-                    resizingFromTop = true;
-                    break;
-            }
-
-            const auto width  = ncsRect.right - ncsRect.left;
-            const auto height = ncsRect.bottom - ncsRect.top;
-            if (m_minimumSize.has_value())
-            {
-                const auto [minimumWidth, minimumHeight] = Vector2<LONG>(m_minimumSize.value());
-
-                if (width < minimumWidth)
-                {
-                    if (resizingFromLeft)
-                        ncsRect.left = ncsRect.right - minimumWidth;
-                    else
-                        ncsRect.right = ncsRect.left + minimumWidth;
-                }
-                if (height < minimumHeight)
-                {
-                    if (resizingFromTop)
-                        ncsRect.top = ncsRect.bottom - minimumHeight;
-                    else
-                        ncsRect.bottom = ncsRect.top + minimumHeight;
-                }
-            }
-
-            if (m_maximumSize.has_value())
-            {
-                const auto [maximumWidth, maximumHeight] = Vector2<LONG>(m_maximumSize.value());
-
-                if (width > maximumWidth)
-                {
-                    if (resizingFromLeft)
-                        ncsRect.left = ncsRect.right - maximumWidth;
-                    else
-                        ncsRect.right = ncsRect.left + maximumWidth;
-                }
-                if (height > maximumHeight)
-                {
-                    if (resizingFromTop)
-                        ncsRect.top = ncsRect.bottom - maximumHeight;
-                    else
-                        ncsRect.bottom = ncsRect.top + maximumHeight;
-                }
-            }
-
-            break;
-        }
-
         // Start resizing
         case WM_ENTERSIZEMOVE:
         {
@@ -866,14 +793,25 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
             break;
         }
 
-        // The system request the min/max window size and position
+        // Fix violations of minimum or maximum size
         case WM_GETMINMAXINFO:
         {
-            // We override the returned information to remove the default limit
-            // (the OS doesn't allow windows bigger than the desktop by default)
-            auto* info             = reinterpret_cast<MINMAXINFO*>(lParam);
-            info->ptMaxTrackSize.x = 50000;
-            info->ptMaxTrackSize.y = 50000;
+            const auto maximumSize = Vector2<LONG>(m_maximumSize.value_or(Vector2u(50'000, 50'000)));
+
+            MINMAXINFO& minMaxInfo      = *reinterpret_cast<PMINMAXINFO>(lParam);
+            minMaxInfo.ptMaxTrackSize.x = maximumSize.x;
+            minMaxInfo.ptMaxTrackSize.y = maximumSize.y;
+            if (m_maximumSize.has_value())
+            {
+                minMaxInfo.ptMaxSize.x = maximumSize.x;
+                minMaxInfo.ptMaxSize.y = maximumSize.y;
+            }
+            if (m_minimumSize.has_value())
+            {
+                const auto minimumSize      = Vector2<LONG>(m_minimumSize.value());
+                minMaxInfo.ptMinTrackSize.x = minimumSize.x;
+                minMaxInfo.ptMinTrackSize.y = minimumSize.y;
+            }
             break;
         }
 
