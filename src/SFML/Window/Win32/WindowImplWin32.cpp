@@ -125,6 +125,18 @@ void setProcessDpiAware()
         FreeLibrary(user32Dll);
     }
 }
+
+sf::Vector2u contentToWindowSize(const sf::Vector2u& size, const HWND& handle)
+{
+    // SetWindowPos wants the total size of the window (including title bar and borders),
+    // so we have to compute it
+    RECT rectangle = {0, 0, static_cast<long>(size.x), static_cast<long>(size.y)};
+    AdjustWindowRect(&rectangle, static_cast<DWORD>(GetWindowLongPtr(handle, GWL_STYLE)), false);
+    const auto width  = static_cast<unsigned int>(rectangle.right - rectangle.left);
+    const auto height = static_cast<unsigned int>(rectangle.bottom - rectangle.top);
+
+    return {width, height};
+}
 } // namespace
 
 namespace sf::priv
@@ -330,13 +342,7 @@ Vector2u WindowImplWin32::getSize() const
 ////////////////////////////////////////////////////////////
 void WindowImplWin32::setSize(const Vector2u& size)
 {
-    // SetWindowPos wants the total size of the window (including title bar and borders),
-    // so we have to compute it
-    RECT rectangle = {0, 0, static_cast<long>(size.x), static_cast<long>(size.y)};
-    AdjustWindowRect(&rectangle, static_cast<DWORD>(GetWindowLongPtr(m_handle, GWL_STYLE)), false);
-    int width  = rectangle.right - rectangle.left;
-    int height = rectangle.bottom - rectangle.top;
-
+    const auto [width, height] = Vector2i(contentToWindowSize(size, m_handle));
     SetWindowPos(m_handle, nullptr, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER);
 }
 
@@ -344,14 +350,16 @@ void WindowImplWin32::setSize(const Vector2u& size)
 ////////////////////////////////////////////////////////////
 void WindowImplWin32::setMinimumSize(const std::optional<Vector2u>& minimumSize)
 {
-    m_minimumSize = minimumSize;
+    m_minimumSize = minimumSize.has_value() ? contentToWindowSize(minimumSize.value(), m_handle) : minimumSize;
 }
+
 
 ////////////////////////////////////////////////////////////
 void WindowImplWin32::setMaximumSize(const std::optional<Vector2u>& maximumSize)
 {
-    m_maximumSize = maximumSize;
+    m_maximumSize = maximumSize.has_value() ? contentToWindowSize(maximumSize.value(), m_handle) : maximumSize;
 }
+
 
 ////////////////////////////////////////////////////////////
 void WindowImplWin32::setTitle(const String& title)
