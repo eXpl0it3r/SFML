@@ -218,6 +218,7 @@ void WindowBase::setSize(const Vector2u& size)
     }
 }
 
+
 ////////////////////////////////////////////////////////////
 void WindowBase::setMinimumSize(const std::optional<Vector2u>& minimumSize)
 {
@@ -225,12 +226,14 @@ void WindowBase::setMinimumSize(const std::optional<Vector2u>& minimumSize)
         m_impl->setMinimumSize(minimumSize);
 }
 
+
 ////////////////////////////////////////////////////////////
 void WindowBase::setMaximumSize(const std::optional<Vector2u>& maximumSize)
 {
     if (m_impl)
         m_impl->setMaximumSize(maximumSize);
 }
+
 
 ////////////////////////////////////////////////////////////
 void WindowBase::setTitle(const String& title)
