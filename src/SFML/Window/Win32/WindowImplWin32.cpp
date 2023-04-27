@@ -126,13 +126,13 @@ void setProcessDpiAware()
     }
 }
 
-sf::Vector2u contentSizeToWindowSize(const sf::Vector2u& size, const HWND& handle)
+sf::Vector2i contentSizeToWindowSize(const sf::Vector2u& size, const HWND& handle)
 {
     // SetWindowPos wants the total size of the window (including title bar and borders) so we have to compute it
     RECT rectangle = {0, 0, static_cast<long>(size.x), static_cast<long>(size.y)};
     AdjustWindowRect(&rectangle, static_cast<DWORD>(GetWindowLongPtr(handle, GWL_STYLE)), false);
-    const auto width  = static_cast<unsigned int>(rectangle.right - rectangle.left);
-    const auto height = static_cast<unsigned int>(rectangle.bottom - rectangle.top);
+    const auto width  = rectangle.right - rectangle.left;
+    const auto height = rectangle.bottom - rectangle.top;
 
     return {width, height};
 }
@@ -341,7 +341,7 @@ Vector2u WindowImplWin32::getSize() const
 ////////////////////////////////////////////////////////////
 void WindowImplWin32::setSize(const Vector2u& size)
 {
-    const auto [width, height] = Vector2i(contentSizeToWindowSize(size, m_handle));
+    const auto [width, height] = contentSizeToWindowSize(size, m_handle);
     SetWindowPos(m_handle, nullptr, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER);
 }
 
@@ -789,8 +789,7 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
         // Fix violations of minimum or maximum size
         case WM_GETMINMAXINFO:
         {
-            const auto maximumSize = Vector2<LONG>(
-                contentSizeToWindowSize(getMaximumSize().value_or(Vector2u(10'000, 10'000)), m_handle));
+            const auto maximumSize = contentSizeToWindowSize(getMaximumSize().value_or(Vector2u(10'000, 10'000)), m_handle);
 
             MINMAXINFO& minMaxInfo      = *reinterpret_cast<PMINMAXINFO>(lParam);
             minMaxInfo.ptMaxTrackSize.x = maximumSize.x;
@@ -802,7 +801,7 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
             }
             if (getMinimumSize().has_value())
             {
-                const auto minimumSize = Vector2<LONG>(contentSizeToWindowSize(getMinimumSize().value(), m_handle));
+                const auto minimumSize      = contentSizeToWindowSize(getMinimumSize().value(), m_handle);
                 minMaxInfo.ptMinTrackSize.x = minimumSize.x;
                 minMaxInfo.ptMinTrackSize.y = minimumSize.y;
             }
@@ -1152,7 +1151,7 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
             if (!getMaximumSize().has_value())
                 break;
 
-            const auto maximumSize  = Vector2i(contentSizeToWindowSize(getMaximumSize().value(), m_handle));
+            const auto maximumSize  = contentSizeToWindowSize(getMaximumSize().value(), m_handle);
             bool       shouldResize = false;
 
             if (pos.cx > maximumSize.x)
