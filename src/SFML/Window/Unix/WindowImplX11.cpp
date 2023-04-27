@@ -847,33 +847,15 @@ void WindowImplX11::setSize(const Vector2u& size)
 ////////////////////////////////////////////////////////////
 void WindowImplX11::setMinimumSize(const std::optional<Vector2u>& minimumSize)
 {
-    // Not sure what to do when resizing is disabled.
-    // Ignore setMinimumSize is what I would recommend
-    if (m_useSizeHints)
-    {
-        assert(false);
-    }
-    else
-    {
-        m_minimumSize = minimumSize;
-        setWindowSizeConstraints();
-    }
+    WindowImpl::setMinimumSize(minimumSize);
+    setWindowSizeConstraints();
 }
 
 ////////////////////////////////////////////////////////////
 void WindowImplX11::setMaximumSize(const std::optional<Vector2u>& maximumSize)
 {
-    // Not sure what to do when resizing is disabled.
-    // Ignore setMaximumSize is what I would recommend
-    if (m_useSizeHints)
-    {
-        assert(false);
-    }
-    else
-    {
-        m_maximumSize = maximumSize;
-        setWindowSizeConstraints();
-    }
+    WindowImpl::setMaximumSize(maximumSize);
+    setWindowSizeConstraints();
 }
 
 ////////////////////////////////////////////////////////////
@@ -2177,16 +2159,16 @@ Vector2i WindowImplX11::getPrimaryMonitorPosition()
 void WindowImplX11::setWindowSizeConstraints()
 {
     XSizeHints* sizeHints = XAllocSizeHints();
-    if (m_minimumSize.has_value())
+    if (getMinimumSize().has_value())
     {
-        const auto minimumSize = m_minimumSize.value_or(sf::Vector2u());
+        const auto minimumSize = getMinimumSize().value_or(sf::Vector2u());
         sizeHints->flags |= PMinSize;
         sizeHints->min_width  = static_cast<int>(minimumSize.x);
         sizeHints->min_height = static_cast<int>(minimumSize.y);
     }
-    if (m_maximumSize.has_value())
+    if (getMaximumSize().has_value())
     {
-        const auto maximumSize = m_maximumSize.value_or(
+        const auto maximumSize = getMaximumSize().value_or(
             sf::Vector2u(std::numeric_limits<unsigned int>::max(), std::numeric_limits<unsigned int>::max()));
         sizeHints->flags |= PMaxSize;
         sizeHints->max_width  = static_cast<int>(maximumSize.x);

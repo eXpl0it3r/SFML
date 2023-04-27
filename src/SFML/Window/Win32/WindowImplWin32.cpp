@@ -348,20 +348,6 @@ void WindowImplWin32::setSize(const Vector2u& size)
 
 
 ////////////////////////////////////////////////////////////
-void WindowImplWin32::setMinimumSize(const std::optional<Vector2u>& minimumSize)
-{
-    m_minimumSize = minimumSize.has_value() ? contentToWindowSize(minimumSize.value(), m_handle) : minimumSize;
-}
-
-
-////////////////////////////////////////////////////////////
-void WindowImplWin32::setMaximumSize(const std::optional<Vector2u>& maximumSize)
-{
-    m_maximumSize = maximumSize.has_value() ? contentToWindowSize(maximumSize.value(), m_handle) : maximumSize;
-}
-
-
-////////////////////////////////////////////////////////////
 void WindowImplWin32::setTitle(const String& title)
 {
     SetWindowTextW(m_handle, title.toWideString().c_str());
@@ -804,19 +790,20 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
         // Fix violations of minimum or maximum size
         case WM_GETMINMAXINFO:
         {
-            const auto maximumSize = Vector2<LONG>(m_maximumSize.value_or(Vector2u(50'000, 50'000)));
+            const auto maximumSize = Vector2<LONG>(
+                contentToWindowSize(getMaximumSize().value_or(Vector2u(10'000, 10'000)), m_handle));
 
             MINMAXINFO& minMaxInfo      = *reinterpret_cast<PMINMAXINFO>(lParam);
             minMaxInfo.ptMaxTrackSize.x = maximumSize.x;
             minMaxInfo.ptMaxTrackSize.y = maximumSize.y;
-            if (m_maximumSize.has_value())
+            if (getMaximumSize().has_value())
             {
                 minMaxInfo.ptMaxSize.x = maximumSize.x;
                 minMaxInfo.ptMaxSize.y = maximumSize.y;
             }
-            if (m_minimumSize.has_value())
+            if (getMinimumSize().has_value())
             {
-                const auto minimumSize      = Vector2<LONG>(m_minimumSize.value());
+                const auto minimumSize      = Vector2<LONG>(contentToWindowSize(getMinimumSize().value(), m_handle));
                 minMaxInfo.ptMinTrackSize.x = minimumSize.x;
                 minMaxInfo.ptMinTrackSize.y = minimumSize.y;
             }

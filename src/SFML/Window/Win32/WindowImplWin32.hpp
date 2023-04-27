@@ -112,22 +112,6 @@ public:
     void setSize(const Vector2u& size) override;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Sets a minimum window rendering region size
-    ///
-    /// \param size New minimum size, in pixels
-    ///
-    ////////////////////////////////////////////////////////////
-    void setMinimumSize(const std::optional<Vector2u>& minimumSize) override;
-
-    ////////////////////////////////////////////////////////////
-    /// \brief Sets a maximum window rendering region size
-    ///
-    /// \param size New maximum size, in pixels
-    ///
-    ////////////////////////////////////////////////////////////
-    void setMaximumSize(const std::optional<Vector2u>& maximumSize) override;
-
-    ////////////////////////////////////////////////////////////
     /// \brief Change the title of the window
     ///
     /// \param title New title
@@ -305,11 +289,9 @@ private:
     Vector2u m_lastSize;               //!< The last handled size of the window
     bool     m_resizing{};             //!< Is the window being resized?
     std::uint16_t m_surrogate{}; //!< First half of the surrogate pair, in case we're receiving a Unicode character in two events
-    bool          m_mouseInside{};         //!< Mouse is inside the window?
-    bool          m_fullscreen{};          //!< Is the window fullscreen?
-    bool          m_cursorGrabbed{};       //!< Is the mouse cursor trapped?
-    std::optional<Vector2u> m_minimumSize; //!< Minimum window size
-    std::optional<Vector2u> m_maximumSize; //!< Maximum window size
+    bool          m_mouseInside{};   //!< Mouse is inside the window?
+    bool          m_fullscreen{};    //!< Is the window fullscreen?
+    bool          m_cursorGrabbed{}; //!< Is the mouse cursor trapped?
 };
 
 } // namespace priv
