@@ -1150,16 +1150,14 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
 
             if (!getMaximumSize().has_value())
                 break;
+            const auto maximumSize = contentSizeToWindowSize(getMaximumSize().value(), m_handle);
 
-            const auto maximumSize  = contentSizeToWindowSize(getMaximumSize().value(), m_handle);
-            bool       shouldResize = false;
-
+            bool shouldResize = false;
             if (pos.cx > maximumSize.x)
             {
                 pos.cx       = maximumSize.x;
                 shouldResize = true;
             }
-
             if (pos.cy > maximumSize.y)
             {
                 pos.cy       = maximumSize.y;
