@@ -496,16 +496,6 @@ private:
     void setFullscreenWindow(const WindowBase* window);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Clamp a window size within the minimum and maximum bounds
-    ///
-    /// \param size Size to clamp
-    ///
-    /// \return Clamped size
-    ///
-    ////////////////////////////////////////////////////////////
-    Vector2u clampSize(const sf::Vector2u& size);
-
-    ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
     std::unique_ptr<priv::WindowImpl> m_impl; //!< Platform-specific implementation of the window

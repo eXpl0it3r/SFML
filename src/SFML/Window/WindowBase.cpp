@@ -211,8 +211,22 @@ void WindowBase::setSize(const Vector2u& size)
 {
     if (m_impl)
     {
-        m_size = clampSize(size);
-        m_impl->setSize(m_size);
+        // Constrain requested size within minimum and maximum bounds
+        const auto minimumSize = m_impl->getMinimumSize().value_or(sf::Vector2u());
+        const auto maximumSize = m_impl->getMaximumSize().value_or(
+            sf::Vector2u(std::numeric_limits<unsigned int>::max(), std::numeric_limits<unsigned int>::max()));
+        const auto width  = std::clamp(size.x, minimumSize.x, maximumSize.x);
+        const auto height = std::clamp(size.y, minimumSize.y, maximumSize.y);
+
+        // Do nothing if requested size matches current size
+        const sf::Vector2u clampedSize(width, height);
+        if (clampedSize == m_size)
+            return;
+
+        m_impl->setSize(clampedSize);
+
+        // Cache the new size
+        m_size = clampedSize;
 
         // Notify the derived class
         onResize();
@@ -234,10 +248,7 @@ void WindowBase::setMinimumSize(const std::optional<Vector2u>& minimumSize)
         assert(minimumSizeIsLessThanMaximumSize() && "Minimum size must be less than maximum size");
 
         m_impl->setMinimumSize(minimumSize);
-
-        const auto clampedSize = clampSize(getSize());
-        if (clampedSize != getSize())
-            setSize(clampedSize);
+        setSize(getSize());
     }
 }
 
@@ -256,10 +267,7 @@ void WindowBase::setMaximumSize(const std::optional<Vector2u>& maximumSize)
         assert(maximumSizeIsGreaterThanMinimumSize() && "Maximum size must be greater than minimum size");
 
         m_impl->setMaximumSize(maximumSize);
-
-        const auto clampedSize = clampSize(getSize());
-        if (clampedSize != getSize())
-            setSize(clampedSize);
+        setSize(getSize());
     }
 }
 
@@ -416,19 +424,6 @@ const WindowBase* WindowBase::getFullscreenWindow()
 void WindowBase::setFullscreenWindow(const WindowBase* window)
 {
     WindowsBaseImpl::fullscreenWindow = window;
-}
-
-sf::Vector2u WindowBase::clampSize(const sf::Vector2u& size)
-{
-    assert(m_impl);
-
-    const auto minimumSize = m_impl->getMinimumSize().value_or(sf::Vector2u());
-    const auto maximumSize = m_impl->getMaximumSize().value_or(
-        sf::Vector2u(std::numeric_limits<unsigned int>::max(), std::numeric_limits<unsigned int>::max()));
-    const auto width  = std::clamp(size.x, minimumSize.x, maximumSize.x);
-    const auto height = std::clamp(size.y, minimumSize.y, maximumSize.y);
-
-    return {width, height};
 }
 
 } // namespace sf
