@@ -257,7 +257,7 @@ public:
     void setSize(const Vector2u& size);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Sets a minimum window rendering region size
+    /// \brief Set the minimum window rendering region size
     ///
     /// \param minimumSize New minimum size, in pixels
     ///
@@ -265,7 +265,7 @@ public:
     void setMinimumSize(const std::optional<Vector2u>& minimumSize);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Sets a maximum window rendering region size
+    /// \brief Set the maximum window rendering region size
     ///
     /// \param maximumSize New maximum size, in pixels
     ///
