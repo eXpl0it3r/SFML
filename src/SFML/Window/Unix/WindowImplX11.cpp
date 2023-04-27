@@ -2156,7 +2156,7 @@ Vector2i WindowImplX11::getPrimaryMonitorPosition()
 
 
 ////////////////////////////////////////////////////////////
-void WindowImplX11::setWindowSizeConstraints()
+void WindowImplX11::setWindowSizeConstraints() const
 {
     XSizeHints* sizeHints = XAllocSizeHints();
     if (getMinimumSize().has_value())
