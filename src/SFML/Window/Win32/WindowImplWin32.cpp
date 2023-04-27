@@ -1141,6 +1141,38 @@ void WindowImplWin32::processEvent(UINT message, WPARAM wParam, LPARAM lParam)
 
             break;
         }
+
+        // Work around Windows 10 bug
+        // When a maximum size is specified and the window is snapped to the edge of the display the window size is subtly too big
+        case WM_WINDOWPOSCHANGED:
+        {
+            WINDOWPOS& pos = *reinterpret_cast<PWINDOWPOS>(lParam);
+            if (pos.flags & SWP_NOSIZE)
+                break;
+
+            if (!getMaximumSize().has_value())
+                break;
+
+            const auto maximumSize  = Vector2i(getMaximumSize().value());
+            bool       shouldResize = false;
+
+            if (pos.cx > maximumSize.x)
+            {
+                pos.cx       = maximumSize.x;
+                shouldResize = true;
+            }
+
+            if (pos.cy > maximumSize.y)
+            {
+                pos.cy       = maximumSize.y;
+                shouldResize = true;
+            }
+
+            if (shouldResize)
+                SetWindowPos(m_handle, pos.hwndInsertAfter, pos.x, pos.y, pos.cx, pos.cy, 0);
+
+            break;
+        }
     }
 }
 
