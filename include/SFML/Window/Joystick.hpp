@@ -155,6 +155,29 @@ struct SFML_WINDOW_API Identification
 ///
 ////////////////////////////////////////////////////////////
 SFML_WINDOW_API void update();
+
+////////////////////////////////////////////////////////////
+/// \brief Load SDL GameControllerDB mappings from a file path
+///
+/// Loads controller mappings in SDL's `gamecontrollerdb.txt` format.
+/// These mappings will be applied to joystick states based on
+/// `vendorId`/`productId` when available on the current platform.
+/// Lines for other platforms are ignored.
+///
+/// \param path File path to a `gamecontrollerdb.txt`-style database
+/// \return `true` if loaded successfully, `false` otherwise
+///
+////////////////////////////////////////////////////////////
+[[nodiscard]] SFML_WINDOW_API bool loadGameControllerDB(const char* path);
+
+////////////////////////////////////////////////////////////
+/// \brief Load SDL GameControllerDB mappings from memory
+///
+/// \param data Text content in SDL `gamecontrollerdb.txt` format
+/// \return `true` if parsed successfully, `false` otherwise
+///
+////////////////////////////////////////////////////////////
+[[nodiscard]] SFML_WINDOW_API bool loadGameControllerDBFromMemory(const char* data);
 } // namespace sf::Joystick
 
 

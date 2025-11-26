@@ -25,6 +25,8 @@ set(SRC
     ${SRCROOT}/JoystickImpl.hpp
     ${SRCROOT}/JoystickManager.cpp
     ${SRCROOT}/JoystickManager.hpp
+    ${SRCROOT}/GameControllerMapping.cpp
+    ${SRCROOT}/GameControllerMapping.hpp
     ${INCROOT}/Keyboard.hpp
     ${SRCROOT}/Keyboard.cpp
     ${INCROOT}/Mouse.hpp

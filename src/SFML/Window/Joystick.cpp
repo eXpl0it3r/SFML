@@ -27,12 +27,22 @@
 ////////////////////////////////////////////////////////////
 #include <SFML/Window/Joystick.hpp>
 #include <SFML/Window/JoystickManager.hpp>
+#include <SFML/Window/JoystickImpl.hpp>
+#include "GameControllerMapping.hpp"
+
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <unordered_map>
 
 #include <cassert>
 
 
 namespace sf::Joystick
 {
+namespace
+{
+}
 ////////////////////////////////////////////////////////////
 bool isConnected(unsigned int joystick)
 {
@@ -80,6 +90,18 @@ Identification getIdentification(unsigned int joystick)
 void update()
 {
     priv::JoystickManager::getInstance().update();
+}
+
+////////////////////////////////////////////////////////////
+bool loadGameControllerDB(const char* path)
+{
+    return priv::loadGameControllerDBFile(path);
+}
+
+////////////////////////////////////////////////////////////
+bool loadGameControllerDBFromMemory(const char* data)
+{
+    return priv::loadGameControllerDBMemory(data);
 }
 
 } // namespace sf::Joystick

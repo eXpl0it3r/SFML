@@ -27,6 +27,9 @@
 ////////////////////////////////////////////////////////////
 #include <SFML/Window/JoystickManager.hpp>
 
+#include <SFML/Window/Joystick.hpp>
+#include "GameControllerMapping.hpp"
+
 #include <cassert>
 
 
@@ -75,6 +78,16 @@ void JoystickManager::update()
         {
             // Get the current state of the joystick
             item.state = item.joystick.update();
+
+            // Apply SDL GameController mapping if available for this VID/PID
+            GameMapping map{};
+            if (getMappingFor(item.identification.vendorId, item.identification.productId, map))
+            {
+                apply(map, item.state);
+            }
+
+            // Apply SDL GameController mapping if available for this VID/PID
+            extern std::unordered_map<sf::Joystick::Identification, int> dummyExternAvoid;
 
             // Check if it's still connected
             if (!item.state.connected)
